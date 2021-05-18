@@ -1,0 +1,97 @@
+const { conversation } = require('@assistant/conversation');
+const functions = require('firebase-functions');
+const axios = require('axios');
+
+const app = conversation({debug:true});
+//function getSpreadsheetData(){
+ //   return axios.get('https://sheetdb.io/api/v1/o2q3bad4r7bz9');
+ // }
+
+app.handle('location1', conv => {
+  // Implement your code here
+
+  
+    //conv.add('you said temperature');
+  
+  return axios.get('https://cdn.jsdelivr.net/gh/jiachen0814/testjson@main/a').then(response => {
+   // return axios.get('https://gt-cep-sensor-publish.s3.amazonaws.com/homes/592551/f0f45f03006f0d00_18%2C+03%2C+21').then(response => {
+      //only one conv.add inside it
+     
+           let message='The location is ';
+    			//let message1='The level is ';
+           message=message+`${response.data.device_details.location}`;
+   			 	//console.log(response.data.device_details.location);
+          conv.add(message);
+    			
+           //message1=message1+`${response.data.data.currentLevel}`;
+   				console.log(response.data.device_details.location);
+        
+          //conv.add(message1);
+          
+     
+    });
+});
+
+app.handle('level1', conv => {
+  // Implement your code here
+  
+  return axios.get('https://cdn.jsdelivr.net/gh/jiachen0814/testjson@main/a').then(response => {
+      //only one conv.add inside it
+     response.data.data.map(object => {
+    
+           let message='The level is ';
+    			//let message1='The level is ';
+           message=message+`${object.currentLevel}`;
+   			 	//console.log(response.data.device_details.location);
+          conv.add(message);
+       		//console.log(object.currentLevel);
+    			
+           //message1=message1+`${response.data.data.currentLevel}`;
+   			 	//console.log(response.data.device_details.location);
+        
+          //conv.add(message1);
+          
+     
+    });
+});
+  });
+
+app.handle('aws1', conv => {
+  /*
+  var params = {
+  Bucket: "gt-cep-sensor-publish",
+  //, MaxKeys: 3
+  Prefix: "homes/1259801"
+  // , Prefix: "homes/1259809"
+  //, Prefix: "homes/592551"
+  //, Prefix: "homes/1304258"
+ };
+var AWS = require('aws-sdk');
+AWS.config.update({accessKeyId: 'AKIAIU2Z2SFWGK6ROBZL', secretAccessKey: 'mysecret', region: 'us-east-1'});
+ 
+var s3 = new AWS.S3();
+var msgList = [];
+var message=msg.payload;
+s3.listObjectsV2(params, function(err, data) {
+   if (err) console.log(err, err.stack); // an error occurred
+   else  {
+       console.log("File count?: " + data.Contents.length + " Truncated?: " + data.isTruncated );
+       for (var i = 0; i < data.Contents.length; i++) {
+           var newmsg ={payload:message, filename:data.Contents[i].Key};
+           msgList.push(newmsg);
+           callback(newmsg);
+       }
+       console.log(msgList);
+   }
+});
+console.log(msgList);
+console.log(message);
+return;
+*/
+});
+
+
+
+
+
+exports.ActionsOnGoogleFulfillment = functions.https.onRequest(app);
